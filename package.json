@@ -8,6 +8,7 @@
   },
   "bundleDependencies": false,
   "dependencies": {
+    "@react-native-community/toolbar-android": "^0.2.1",
     "prop-types": "^15.5.10",
     "react-native-collapsible": "^0.9.0",
     "react-native-timeago": "^0.4.0",
