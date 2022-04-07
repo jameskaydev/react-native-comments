@@ -14,7 +14,7 @@ import {
   TextInput,
   TouchableHighlight
 } from "react-native";
-import moment from "moment";
+
 import PropTypes from "prop-types";
 import IconFa from "react-native-vector-icons/FontAwesome";
 import IconFa5 from "react-native-vector-icons/FontAwesome5Pro";
@@ -35,10 +35,11 @@ export default class Comments extends PureComponent {
       editCommentText: null,
       editingComment: null,
       newCommentText: null,
-      loadingComments: !(props.data && props.data.length),
+      loadingComments: props.data && props.data.length ? false : true,
       likesModalVisible: false,
       likesModalData: null,
       editModalVisible: false,
+      commentsLastUpdated: null,
       expanded: [],
       pagination: []
     };
@@ -68,18 +69,19 @@ export default class Comments extends PureComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.data) {
       this.setState({
+        commentsLastUpdated: new Date().getTime(),
         loadingComments: false
       });
     }
   }
 
   renderIcon(props) {
-    if (this.props.fa5) {
-      return <IconFa5 {...props} />;
-    }
-    if (this.props.fa5Pro) {
-      return <IconFa5Pro {...props} />;
-    }
+    // if (this.props.fa5) {
+    // return <IconFa5 {...props} />;
+    // }
+    // if (this.props.fa5Pro) {
+    // return <IconFa5Pro {...props} />;
+    // }
 
     return <IconFa {...props} />;
   }
@@ -89,6 +91,7 @@ export default class Comments extends PureComponent {
   }
 
   toggleExpand(c, focus) {
+    console.log('toggleExpand');
     const id = this.props.keyExtractor(c);
     let expanded = this.state.expanded;
 
@@ -111,8 +114,9 @@ export default class Comments extends PureComponent {
   }
 
   focusOnReplyInput(id) {
+    console.log(id , "id replied");
     let input = this.textInputs["input" + id];
-
+    console.log(input,"input ref");
     input.measure((x, y, width, height, pageX, pageY) => {
       console.log(pageY);
       input.focus();
@@ -122,6 +126,7 @@ export default class Comments extends PureComponent {
 
   handleReply(c) {
     if (!this.props.isChild) return;
+
     if (!this.props.isChild(c)) {
       this.toggleExpand(c, true);
     } else {
@@ -153,8 +158,8 @@ export default class Comments extends PureComponent {
   }
 
   handleLikesTap(c) {
-    this.setState({ likesModalData: this.props.likesExtractor(c) });
-    this.setLikesModalVisible(!this.state.likesModalVisible);
+    // this.setState({ likesModalData: this.props.likesExtractor(c) });
+    // this.setLikesModalVisible(!this.state.likesModalVisible);
   }
 
   handleEditAction(c) {
@@ -165,6 +170,7 @@ export default class Comments extends PureComponent {
    *
    * Generates a single comment
    * */
+  
   generateComment(c) {
     return (
       <Comment
@@ -173,17 +179,13 @@ export default class Comments extends PureComponent {
         usernameTapAction={this.handleUsernameTap}
         username={this.props.usernameExtractor(c)}
         body={this.props.bodyExtractor(c)}
-        likesNr={
-          this.props.likesExtractor(c) ? this.props.likesExtractor(c).length : 0
-        }
+        // likesNr={this.props.likesExtractor(c).length}
+        likesNr={0}
         canEdit={this.canUserEdit(c)}
         updatedAt={this.props.editTimeExtractor(c)}
         replyAction={this.props.replyAction ? this.handleReply : null}
         image={this.props.imageExtractor(c)}
-        child={true}
-        isOwnComment={
-          this.props.usernameExtractor(c) == this.props.viewingUserName
-        }
+        child={this.props.isChild(c)}
         reportAction={this.props.reportAction ? this.handleReport : null}
         liked={this.props.likeExtractor ? this.props.likeExtractor(c) : null}
         reported={
@@ -204,7 +206,7 @@ export default class Comments extends PureComponent {
   renderChildren(items) {
     if (!items || !items.length) return;
     let self = this;
-    return items.map(function(c) {
+    return items.map(function (c) {
       return (
         <View key={self.props.keyExtractor(c) + "" + Math.random()}>
           {self.generateComment(c)}
@@ -244,14 +246,10 @@ export default class Comments extends PureComponent {
    * Can user edit a comment
    * */
   canUserEdit(item) {
-    if (
-      this.props.viewingUserName == this.props.usernameExtractor(item) ||
-      this.props.userIsAdmin
-    ) {
+    if (this.props.viewingUserName == this.props.usernameExtractor(item)) {
       if (!this.props.editMinuteLimit) return true;
       let created =
-        moment(this.props.createdTimeExtractor(item)).valueOf() / 1000;
-
+        new Date(this.props.createdTimeExtractor(item)).getTime() / 1000;
       return (
         new Date().getTime() / 1000 - created < this.props.editMinuteLimit * 60
       );
@@ -286,126 +284,122 @@ export default class Comments extends PureComponent {
       <View>
         {this.generateComment(item)}
         <View style={{ marginLeft: 40 }}>
-          {item.childrenCount && this.props.childPropName ? (
+          {item.children && this.props.childPropName ? (
             <TouchableHighlight onPress={() => this.toggleExpand(item)}>
               <View style={styles.repliedSection}>
-                <Image
+                {/* <Image
                   style={styles.repliedImg}
                   source={{
-                    uri: this.props.imageExtractor(
+                    uri : this.props.imageExtractor(
                       item[this.props.childPropName][0]
                     )
                   }}
-                />
-                <Text style={styles.repliedUsername}>
+                /> */}
+                {/* <Text style={styles.repliedUsername}>
                   {" "}
                   {this.props.usernameExtractor(
                     item[this.props.childPropName][0]
                   )}{" "}
+                </Text> */}
+                <Text style={styles.repliedText}>
+                  {this.isExpanded(this.props.keyExtractor(item)) ? '--- Hide replies' : `--- View replies(${this.props.childrenCountExtractor(item)})`}
                 </Text>
-                <Text style={styles.repliedText}>replied</Text>
-                <Text style={styles.repliedCount}>
+                {/* <Text style={styles.repliedCount}>
                   {" "}
                   * {this.props.childrenCountExtractor(item)}
                   {this.props.childrenCountExtractor(item) > 1
                     ? " replies"
                     : " reply"}
-                </Text>
+                </Text> */}
               </View>
             </TouchableHighlight>
           ) : null}
           <Collapsible
+            // style={{ backgroundColor: 'purple' }}
             easing={"easeOutCubic"}
             duration={400}
+            // collapsed={false}
             collapsed={!this.isExpanded(this.props.keyExtractor(item))}
           >
-            {this.props.childrenCountExtractor(item) &&
-            this.props.paginateAction ? (
-              <View>
-                {this.props.childPropName &&
-                this.props.childrenCountExtractor(item) >
-                  item[this.props.childPropName].length ? (
-                  <TouchableHighlight
-                    onPress={() =>
-                      this.paginate(
-                        this.getFirstChildCommentId(item),
-                        "down",
-                        this.props.keyExtractor(item)
-                      )
-                    }
-                  >
-                    <Text
-                      style={[
-                        { textAlign: "center", paddingTop: 15 },
-                        this.getStyle("previousText")
-                      ]}
+            {true && true
+              // this.props.paginateAction
+              // this.props.childrenCountExtractor(item)
+              ? (
+                <View style={{}}>
+                  <View style={styles.inputSection}>
+                    <TextInput
+                      ref={input =>
+                      (this.textInputs[
+                        "input" + this.props.keyExtractor(item)
+                      ] = input)
+                      }
+                      style={styles.input}
+                      multiline={true}
+                      value={this.state.replyCommentText}
+                      onChangeText={text => this.setState({ replyCommentText: text })}
+                      placeholder={"Add a comment"}
+                      placeholderTextColor={'#9B9B9B'}
+                      numberOfLines={3}
+                    />
+                    <TouchableHighlight
+                      onPress={() => {
+                        this.props.saveAction(
+                          this.state.replyCommentText,
+                          this.props.keyExtractor(item)
+                        );
+                        this.setState({ replyCommentText: null });
+                        Keyboard.dismiss();
+                      }}
                     >
-                      Show previous...
-                    </Text>
-                  </TouchableHighlight>
-                ) : null}
-
-                {this.renderChildren(
-                  item[this.props.childPropName],
-                  this.props.keyExtractor(item)
-                )}
-
-                {this.props.childrenCountExtractor(item) >
-                  item[this.props.childPropName].length &&
-                this.props.paginateAction ? (
-                  <TouchableHighlight
-                    onPress={() =>
-                      this.paginate(
-                        this.getLastChildCommentId(item),
-                        "up",
-                        this.props.keyExtractor(item)
-                      )
-                    }
-                  >
-                    <Text
-                      style={[
-                        { textAlign: "center", paddingTop: 15 },
-                        this.getStyle("moreText")
-                      ]}
+                      {this.renderIcon({
+                        style: styles.submit,
+                        name: "send",
+                        size: 15,
+                        color: "#9B9B9B"
+                      })}
+                    </TouchableHighlight>
+                  </View>
+                  {/* {this.props.childPropName &&
+                    this.props.childrenCountExtractor(item) >
+                    item[this.props.childPropName].length ? (
+                    <TouchableHighlight
+                      onPress={() =>
+                        this.paginate(
+                          this.getFirstChildCommentId(item),
+                          "down",
+                          this.props.keyExtractor(item)
+                        )
+                      }
                     >
-                      Show more...
-                    </Text>
-                  </TouchableHighlight>
-                ) : null}
-              </View>
-            ) : null}
-            <View style={styles.inputSection}>
-              <TextInput
-                ref={input =>
-                  (this.textInputs[
-                    "input" + this.props.keyExtractor(item)
-                  ] = input)
-                }
-                style={styles.input}
-                multiline={true}
-                value={this.state.replyCommentText}
-                onChangeText={text => this.setState({ replyCommentText: text })}
-                placeholder={"Write comment"}
-                numberOfLines={3}
-              />
-              <TouchableHighlight
-                onPress={() => {
-                  this.props.saveAction(
-                    this.state.replyCommentText,
+                      <Text style={{ textAlign: "center", paddingTop: 15, color: 'red' }}>
+                        Show previous...
+                      </Text>
+                    </TouchableHighlight>
+                  ) : null} */}
+
+                  {this.renderChildren(
+                    item[this.props.childPropName],
                     this.props.keyExtractor(item)
-                  );
-                  this.setState({ replyCommentText: null });
-                  Keyboard.dismiss();
-                }}
-              >
-                {this.renderIcon({
-                  style: styles.submit,
-                  name: "caret-right",
-                  size: 40,
-                  color: "gray"
-                })}
-              </TouchableHighlight>
-            </View>
+                  )}
+                  {/* {this.props.childrenCountExtractor(item) >
+                    item[this.props.childPropName].length &&
+                    this.props.paginateAction ? (
+                    <TouchableHighlight
+                      onPress={() =>
+                        this.paginate(
+                          this.getLastChildCommentId(item),
+                          "up",
+                          this.props.keyExtractor(item)
+                        )
+                      }
+                    >
+                      <Text style={{ textAlign: "center", paddingTop: 15 }}>
+                        Show more...
+                      </Text>
+                    </TouchableHighlight>
+                  ) : null} */}
+                </View>
+              ) : null}
           </Collapsible>
         </View>
       </View>
@@ -415,36 +409,12 @@ export default class Comments extends PureComponent {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <View style={styles.inputSection}>
-          <TextInput
-            style={styles.input}
-            ref={input => (this.textInputs["inputMain"] = input)}
-            multiline={true}
-            onChangeText={text => this.setState({ newCommentText: text })}
-            placeholder={"Write comment"}
-            numberOfLines={3}
-          />
-          <TouchableHighlight
-            onPress={() => {
-              this.props.saveAction(this.state.newCommentText, false);
-              this.setState({ newCommentText: null });
-              this.textInputs["inputMain"].clear();
-              Keyboard.dismiss();
-            }}
-          >
-            {this.renderIcon({
-              style: styles.submit,
-              name: "caret-right",
-              size: 40,
-              color: "gray"
-            })}
-          </TouchableHighlight>
-        </View>
+
         {!this.state.loadingComments && !this.props.data ? (
           <Text style={{ textAlign: "center" }}>No comments yet</Text>
         ) : null}
 
-        {!this.state.loadingComments &&
+        {/* {!this.state.loadingComments &&
         this.props.data &&
         this.props.data.length &&
         this.props.paginateAction ? (
@@ -457,25 +427,20 @@ export default class Comments extends PureComponent {
             }}
           >
             <View>
-              <Text
-                style={[
-                  { textAlign: "center", color: "gray" },
-                  this.getStyle("previousText")
-                ]}
-              >
+              <Text style={{ textAlign: "center", color: "gray" }}>
                 Show previous
               </Text>
             </View>
           </TouchableHighlight>
-        ) : null}
-        {/* Comments */}
+        ) : null} */}
+        {/*Comments*/}
         {this.props.data ? (
           <FlatList
             keyboardShouldPersistTaps="always"
-            style={{ backgroundColor: "white" }}
+            style={{ backgroundColor: "#000000" }}
             data={this.props.data}
-            extraData={this.props.lastCommentUpdate}
-            initialNumToRender={this.props.initialDisplayCount || 20}
+            extraData={this.state.commentsLastUpdated}
+            initialNumToRender={this.props.initialDisplayCount || 999}
             keyExtractor={item => this.props.keyExtractor(item) + ""}
             renderItem={this.renderComment}
           />
@@ -504,10 +469,10 @@ export default class Comments extends PureComponent {
           </View>
         ) : null}
 
-        {!this.state.loadingComments &&
-        this.props.data &&
-        this.props.data.length &&
-        this.props.paginateAction ? (
+        {/* {!this.state.loadingComments &&
+          this.props.data &&
+          this.props.data.length &&
+          this.props.paginateAction ? (
           <TouchableHighlight
             style={{ height: 70 }}
             onPress={() => {
@@ -527,7 +492,7 @@ export default class Comments extends PureComponent {
           <Text style={{ textAlign: "center", color: "gray" }}>
             No comments yet
           </Text>
-        )}
+        )} */}
 
         <Modal
           animationType={"slide"}
@@ -586,10 +551,7 @@ export default class Comments extends PureComponent {
                 numberOfLines={3}
               />
               <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-around"
-                }}
+                style={{ flexDirection: "row", justifyContent: "space-around" }}
               >
                 <TouchableHighlight
                   onPress={() => this.setEditModalVisible(false)}
@@ -617,6 +579,35 @@ export default class Comments extends PureComponent {
             </View>
           </View>
         </Modal>
+        <View style={{ backgroundColor: '#000000', alignItems: 'center' }}>
+          {this.state.expanded.length == 0 && <View style={styles.inputSection}>
+            <TextInput
+              style={styles.input}
+              ref={input => (this.textInputs["inputMain"] = input)}
+              multiline={true}
+              onChangeText={text => this.setState({ newCommentText: text })}
+              placeholder={"Add a comment"}
+              placeholderTextColor={'#9B9B9B'}
+              numberOfLines={3}
+            />
+            <TouchableHighlight
+              style={{ marginRight: 10 }}
+              onPress={() => {
+                this.props.saveAction(this.state.newCommentText, false);
+                this.setState({ newCommentText: null });
+                this.textInputs["inputMain"].clear();
+                Keyboard.dismiss();
+              }}
+            >
+              {this.renderIcon({
+                style: styles.submit,
+                name: "send",
+                size: 15,
+                color: "#9B9B9B"
+              })}
+            </TouchableHighlight>
+          </View>}
+        </View>
       </View>
     );
   }
