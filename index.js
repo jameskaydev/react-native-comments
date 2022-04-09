@@ -114,9 +114,9 @@ export default class Comments extends PureComponent {
   }
 
   focusOnReplyInput(id) {
-    console.log(id , "id replied");
+    console.log(id, "id replied");
     let input = this.textInputs["input" + id];
-    console.log(input,"input ref");
+    console.log(input, "input ref");
     input.measure((x, y, width, height, pageX, pageY) => {
       console.log(pageY);
       input.focus();
@@ -170,7 +170,7 @@ export default class Comments extends PureComponent {
    *
    * Generates a single comment
    * */
-  
+
   generateComment(c) {
     return (
       <Comment
@@ -284,7 +284,7 @@ export default class Comments extends PureComponent {
       <View>
         {this.generateComment(item)}
         <View style={{ marginLeft: 40 }}>
-          {item.children && this.props.childPropName ? (
+          {item[this.props.childPropName].length !== 0 && this.props.childPropName ? (
             <TouchableHighlight onPress={() => this.toggleExpand(item)}>
               <View style={styles.repliedSection}>
                 {/* <Image
@@ -317,7 +317,7 @@ export default class Comments extends PureComponent {
           <Collapsible
             // style={{ backgroundColor: 'purple' }}
             easing={"easeOutCubic"}
-            duration={400}
+            duration={500}
             // collapsed={false}
             collapsed={!this.isExpanded(this.props.keyExtractor(item))}
           >
@@ -325,8 +325,8 @@ export default class Comments extends PureComponent {
               // this.props.paginateAction
               // this.props.childrenCountExtractor(item)
               ? (
-                <View style={{}}>
-                  <View style={styles.inputSection}>
+                <View style={{ }}>
+                  <View style={[styles.inputSection, { left: -9 }]}>
                     <TextInput
                       ref={input =>
                       (this.textInputs[
@@ -579,7 +579,7 @@ export default class Comments extends PureComponent {
             </View>
           </View>
         </Modal>
-        <View style={{ backgroundColor: '#000000', alignItems: 'center' }}>
+        <View style={{ backgroundColor: '#000000', alignItems: 'center', }}>
           {this.state.expanded.length == 0 && <View style={styles.inputSection}>
             <TextInput
               style={styles.input}
