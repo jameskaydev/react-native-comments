@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     width: 150,
     justifyContent: "space-between",
-    flexDirection: "row"
+    flexDirection: "row" ,
   },
   repliedImg: {
     height: 20,
@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
     color: '#bcbcbc',
     height: 30,
     justifyContent: 'center',
-    // backgroundColor : 'red' ,
   },
   repliedCount: {
     color: "#9B9B9B",
@@ -87,7 +86,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#393a3c",
     borderRadius: 10,
-    width: '80%',
+    width: '90%',
+    alignSelf : 'flex-start' ,
     alignSelf: 'center',
   },
   submit: {
