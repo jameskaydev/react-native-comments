@@ -7,7 +7,8 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse"
   },
   left: {
-    padding: 5
+    // padding: 5 ,
+    backgroundColor : 'purple'
   },
   image: {
     height: 30,
@@ -15,7 +16,9 @@ const styles = StyleSheet.create({
     borderRadius: 15
   },
   right: {
-    flex: 1,
+    // width : '100%' ,
+    flex: 1, 
+    // backgroundColor : 'blue'
   },
   rightContent: {
     borderRadius: 10,
@@ -42,13 +45,26 @@ const styles = StyleSheet.create({
   rightActionBar: {
     paddingRight: 10,
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between" ,
+    // backgroundColor : 'red' ,
+
   },
   actionButton: {
+  },
+  replyButton: {
+    padding: 5,
+    marginRight: 20
+  },
+  bottomRightActionBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: -5,
+    marginBottom: -5
   },
   time: {
     fontSize: 12,
     paddingLeft: 5,
+    alignSelf: 'center',
     color: "#9B9B9B",
     fontStyle: "italic"
   },
@@ -56,12 +72,17 @@ const styles = StyleSheet.create({
     color: '#bcbcbc',
     fontWeight: "bold",
   },
+  vote: {
+    marginHorizontal: 3 ,
+    color: '#bcbcbc' ,
+    fontFamily: 'Roboto',
+  },
   repliedSection: {
     paddingTop: 5,
     paddingBottom: 5,
     width: 150,
     justifyContent: "space-between",
-    flexDirection: "row" ,
+    flexDirection: "row",
   },
   repliedImg: {
     height: 20,
@@ -87,7 +108,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#393a3c",
     borderRadius: 10,
     width: '90%',
-    alignSelf : 'flex-start' ,
+    alignSelf: 'flex-start',
     alignSelf: 'center',
   },
   submit: {
