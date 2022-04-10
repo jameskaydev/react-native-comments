@@ -13,7 +13,7 @@ import {
   Modal,
   Alert
 } from "react-native";
-
+import Octicons from 'react-native-vector-icons/Octicons'
 import PropTypes from "prop-types";
 import TimeAgo from "react-native-timeago";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -38,19 +38,19 @@ export default class Comment extends PureComponent {
   }
 
   handleReport() {
-    Alert.alert(
-      "Confirm report",
-      "Are you sure you want to report?",
-      [
-        {
-          text: "Yes",
-          onPress: () => this.props.reportAction(this.props.data)
-        },
-        { text: "No", onPress: () => null }
-      ],
-      true
-    );
-    this.setState({ menuVisible: false });
+    // Alert.alert(
+    //   "Confirm report",
+    //   "Are you sure you want to report?",
+    //   [
+    //     {
+    //       text: "Yes",
+    //       onPress: () => this.props.reportAction(this.props.data)
+    //     },
+    //     { text: "No", onPress: () => null }
+    //   ],
+    //   true
+    // );
+    // this.setState({ menuVisible: false });
   }
   handleReply() {
     this.props.replyAction(this.props.data);
@@ -94,7 +94,7 @@ export default class Comment extends PureComponent {
   render() {
     return (
       <View style={styles.commentContainer}>
-        <View style={styles.left}>
+        {/* <View style={styles.left}>
           <TouchableHighlight onPress={this.handleUsernameTap}>
             <View style={{ alignItems: "center" }}>
               <Image
@@ -121,11 +121,11 @@ export default class Comment extends PureComponent {
               ) : null}
             </View>
           </TouchableHighlight>
-        </View>
-        <TouchableOpacity
-          onPress={() => this.setState({ menuVisible: false })}
-          onLongPress={() => this.setModalVisible()}
-          style={styles.right}
+        </View> */}
+        <View
+          // onPress={() => this.setState({ menuVisible: false })}
+          // onLongPress={() => this.setModalVisible()}
+          style={[styles.right]}
         >
           <View style={styles.rightContent}>
             <View style={styles.rightContentTop}>
@@ -135,36 +135,39 @@ export default class Comment extends PureComponent {
             </View>
             <Text style={styles.body}>{this.props.body}</Text>
           </View>
-          <View style={styles.rightActionBar}>
+          <View style={[styles.rightActionBar]}>
             <TimeAgo style={styles.time} time={this.props.updatedAt} />
-            {this.props.likeAction ? (
-              <TouchableHighlight
-                style={styles.actionButton}
-                onPress={this.handleLike}
-              >
-                <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={[
-                      styles.actionText,
-                      { color: this.props.liked ? "red" : '#9B9B9B' }
-                    ]}
-                  >
-                    Like{" "}
-                  </Text>
-                </View>
-              </TouchableHighlight>
-            ) : null}
-            {!this.props.child ? (
-              <TouchableHighlight
-                style={styles.actionButton}
-                onPress={this.handleReply}
-              >
-                <Text style={styles.actionText}>Reply</Text>
-              </TouchableHighlight>
-            ) : null}
+            <View style={styles.bottomRightActionBar}>
+              {!this.props.child ? (
+                <TouchableHighlight
+                  style={styles.replyButton}
+                  onPress={this.handleReply}
+                >
+                  <Image style={{ width: 17, height: 17 }} source={require('./reply.png')} />
+                </TouchableHighlight>
+              ) : null}
+              {this.props.likeAction ? (
+                <TouchableHighlight
+                  style={styles.actionButton}
+                  onPress={this.handleLike}
+                >
+                  <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                    <TouchableOpacity style={{ padding : 5 }}>
+                      <Image style={{ width: 17, height: 17 }} source={require('./top-arrow.png')} />
+                    </TouchableOpacity>
+                    <Text style={styles.vote}>
+                      {'432'}
+                    </Text>
+                    <TouchableOpacity style={{ padding : 5 }}>
+                      <Image style={{ width: 17, height: 17 }} source={require('./bottom-arrow.png')} />
+                    </TouchableOpacity>
+                  </View>
+                </TouchableHighlight>
+              ) : null}
+            </View>
           </View>
-        </TouchableOpacity>
-        {this.state.menuVisible ? (
+        </View>
+        {/* {this.state.menuVisible ? (
           <View style={styles.menu}>
             {this.props.canEdit ? (
               <TouchableOpacity
@@ -202,7 +205,7 @@ export default class Comment extends PureComponent {
               </TouchableOpacity>
             ) : null}
           </View>
-        ) : null}
+        ) : null} */}
       </View>
     );
   }
