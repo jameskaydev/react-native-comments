@@ -301,16 +301,12 @@ export default class Comments extends PureComponent {
                     item[this.props.childPropName][0]
                   )}{" "}
                 </Text> */}
+                <View style={{ flexDirection : 'row' , alignItems : 'center'}}>
+                  <View style={{ width : 10 , height : 0.6 , backgroundColor : '#bcbcbc' ,marginRight : 4 , bottom : 5 }}/>
                 <Text style={styles.repliedText}>
-                  {this.isExpanded(this.props.keyExtractor(item)) ? '--- Hide replies' : `--- View replies(${this.props.childrenCountExtractor(item)})`}
+                  {this.isExpanded(this.props.keyExtractor(item)) ? 'Hide replies' : `View replies(${this.props.childrenCountExtractor(item)})`}
                 </Text>
-                {/* <Text style={styles.repliedCount}>
-                  {" "}
-                  * {this.props.childrenCountExtractor(item)}
-                  {this.props.childrenCountExtractor(item) > 1
-                    ? " replies"
-                    : " reply"}
-                </Text> */}
+                </View>
               </View>
             </TouchableHighlight>
           ) : null}
