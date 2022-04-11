@@ -12,7 +12,8 @@ import {
   ActivityIndicator,
   Keyboard,
   TextInput,
-  TouchableHighlight
+  TouchableHighlight,
+  Animated
 } from "react-native";
 
 import PropTypes from "prop-types";
@@ -41,7 +42,8 @@ export default class Comments extends PureComponent {
       editModalVisible: false,
       commentsLastUpdated: null,
       expanded: [],
-      pagination: []
+      pagination: [] ,
+      scrollY : new Animated.Value(0)
     };
 
     this.textInputs = [];
@@ -61,6 +63,11 @@ export default class Comments extends PureComponent {
   setLikesModalVisible(visible) {
     this.setState({ likesModalVisible: visible });
   }
+
+
+
+  
+
 
   setEditModalVisible(visible) {
     this.setState({ editModalVisible: visible });
@@ -301,11 +308,11 @@ export default class Comments extends PureComponent {
                     item[this.props.childPropName][0]
                   )}{" "}
                 </Text> */}
-                <View style={{ flexDirection : 'row' , alignItems : 'center'}}>
-                  <View style={{ width : 10 , height : 0.6 , backgroundColor : '#bcbcbc' ,marginRight : 4 , bottom : 5 }}/>
-                <Text style={styles.repliedText}>
-                  {this.isExpanded(this.props.keyExtractor(item)) ? 'Hide replies' : `View replies(${this.props.childrenCountExtractor(item)})`}
-                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ width: 10, height: 0.6, backgroundColor: '#bcbcbc', marginRight: 4, bottom: 5 }} />
+                  <Text style={styles.repliedText}>
+                    {this.isExpanded(this.props.keyExtractor(item)) ? 'Hide replies' : `View replies(${this.props.childrenCountExtractor(item)})`}
+                  </Text>
                 </View>
               </View>
             </TouchableHighlight>
@@ -321,7 +328,7 @@ export default class Comments extends PureComponent {
               // this.props.paginateAction
               // this.props.childrenCountExtractor(item)
               ? (
-                <View style={{ }}>
+                <View style={{}}>
                   <View style={[styles.inputSection, { left: -9 }]}>
                     <TextInput
                       ref={input =>
@@ -431,9 +438,14 @@ export default class Comments extends PureComponent {
         ) : null} */}
         {/*Comments*/}
         {this.props.data ? (
-          <FlatList
+          <Animated.FlatList
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { y: this.props.animatedIndex } } }],
+              { useNativeDriver: false },
+            )}
+            contentContainerStyle={{ paddingTop : 210 ,}}
             keyboardShouldPersistTaps="always"
-            style={{ backgroundColor: "#000000" }}
+            style={{ backgroundColor: undefined  }}
             data={this.props.data}
             extraData={this.state.commentsLastUpdated}
             initialNumToRender={this.props.initialDisplayCount || 999}
@@ -575,10 +587,10 @@ export default class Comments extends PureComponent {
             </View>
           </View>
         </Modal>
-        <View style={{ backgroundColor: '#000000', alignItems: 'center', }}>
+        <View style={{ alignItems: 'center' }}>
           {this.state.expanded.length == 0 && <View style={styles.inputSection}>
             <TextInput
-              style={styles.input}
+              style={[styles.input]}
               ref={input => (this.textInputs["inputMain"] = input)}
               multiline={true}
               onChangeText={text => this.setState({ newCommentText: text })}
