@@ -1,28 +1,17 @@
 /**
  * Created by tino on 6/6/17.
  */
-import React, { PureComponent } from "react";
+import React ,{ PureComponent } from "react";
 import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  Modal,
-  Dimensions,
-  ActivityIndicator,
-  Keyboard,
-  TextInput,
-  TouchableHighlight,
-  Animated
+  ActivityIndicator, Animated, Dimensions, FlatList, Image, Keyboard, Modal, Text, TextInput,
+  TouchableHighlight, View
 } from "react-native";
 
 import PropTypes from "prop-types";
-import IconFa from "react-native-vector-icons/FontAwesome";
-import IconFa5 from "react-native-vector-icons/FontAwesome5Pro";
-import IconFa5Pro from "react-native-vector-icons/FontAwesome5Pro";
-import styles from "./styles";
 import Collapsible from "react-native-collapsible";
+import IconFa from "react-native-vector-icons/FontAwesome";
 import Comment from "./Comment";
+import styles from "./styles";
 
 const screen = Dimensions.get("screen");
 
@@ -42,8 +31,8 @@ export default class Comments extends PureComponent {
       editModalVisible: false,
       commentsLastUpdated: null,
       expanded: [],
-      pagination: [] ,
-      scrollY : new Animated.Value(0)
+      pagination: [],
+      scrollY: new Animated.Value(0)
     };
 
     this.textInputs = [];
@@ -66,7 +55,7 @@ export default class Comments extends PureComponent {
 
 
 
-  
+
 
 
   setEditModalVisible(visible) {
@@ -288,7 +277,7 @@ export default class Comments extends PureComponent {
   renderComment(c) {
     const item = c.item;
     return (
-      <View>
+      <View style={{ width: (Dimensions.get('window').width * 0.9) + 5 , alignSelf : 'center' }}>
         {this.generateComment(item)}
         <View style={{ marginLeft: 40 }}>
           {item[this.props.childPropName].length !== 0 && this.props.childPropName ? (
@@ -412,7 +401,6 @@ export default class Comments extends PureComponent {
   render() {
     return (
       <View style={{ flex: 1 }}>
-
         {!this.state.loadingComments && !this.props.data ? (
           <Text style={{ textAlign: "center" }}>No comments yet</Text>
         ) : null}
@@ -443,9 +431,10 @@ export default class Comments extends PureComponent {
               [{ nativeEvent: { contentOffset: { y: this.props.animatedIndex } } }],
               { useNativeDriver: false },
             )}
-            contentContainerStyle={{ paddingTop : 210 ,}}
+            ListHeaderComponent={this.props.headerComponent}
+            // contentContainerStyle={{ paddingTop : this.props.paddingTop ,}}
             keyboardShouldPersistTaps="always"
-            style={{ backgroundColor: undefined  }}
+            style={{ backgroundColor: 'undefined' }}
             data={this.props.data}
             extraData={this.state.commentsLastUpdated}
             initialNumToRender={this.props.initialDisplayCount || 999}
