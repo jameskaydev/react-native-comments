@@ -171,6 +171,8 @@ export default class Comments extends PureComponent {
     return (
       <Comment
         data={c}
+        upVotePress={this.props.upVotePress}
+        downVotePress={this.props.downVotePress}
         id={this.props.keyExtractor(c)}
         usernameTapAction={this.handleUsernameTap}
         username={this.props.usernameExtractor(c)}
