@@ -1,7 +1,7 @@
 /**
  * Created by tino on 6/6/17.
  */
-import React ,{ PureComponent } from "react";
+import React, { PureComponent } from "react";
 import {
   ActivityIndicator, Animated, Dimensions, FlatList, Image, Keyboard, Modal, Text, TextInput,
   TouchableHighlight, View
@@ -12,6 +12,7 @@ import Collapsible from "react-native-collapsible";
 import IconFa from "react-native-vector-icons/FontAwesome";
 import Comment from "./Comment";
 import styles from "./styles";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const screen = Dimensions.get("screen");
 
@@ -124,7 +125,8 @@ export default class Comments extends PureComponent {
     if (!this.props.isChild) return;
 
     if (!this.props.isChild(c)) {
-      this.toggleExpand(c, true);
+      this.props.replyAction(c)
+      // this.toggleExpand(c, true);
     } else {
       this.focusOnReplyInput(this.props.parentIdExtractor(c));
     }
@@ -171,8 +173,6 @@ export default class Comments extends PureComponent {
     return (
       <Comment
         data={c}
-        upVotePress={this.props.upVotePress}
-        downVotePress={this.props.downVotePress}
         id={this.props.keyExtractor(c)}
         usernameTapAction={this.handleUsernameTap}
         username={this.props.usernameExtractor(c)}
@@ -279,7 +279,7 @@ export default class Comments extends PureComponent {
   renderComment(c) {
     const item = c.item;
     return (
-      <View style={{ width: (Dimensions.get('window').width * 0.9) + 5 , alignSelf : 'center' }}>
+      <View style={{ width: (Dimensions.get('window').width * 0.9) + 5, alignSelf: 'center' }}>
         {this.generateComment(item)}
         <View style={{ marginLeft: 40 }}>
           {item[this.props.childPropName].length !== 0 && this.props.childPropName ? (
@@ -578,34 +578,18 @@ export default class Comments extends PureComponent {
             </View>
           </View>
         </Modal>
-        <View style={{ alignItems: 'center' }}>
-          {this.state.expanded.length == 0 && <View style={styles.inputSection}>
-            <TextInput
-              style={[styles.input]}
-              ref={input => (this.textInputs["inputMain"] = input)}
-              multiline={true}
-              onChangeText={text => this.setState({ newCommentText: text })}
-              placeholder={"Add a comment"}
-              placeholderTextColor={'#9B9B9B'}
-              numberOfLines={3}
-            />
-            <TouchableHighlight
-              style={{ marginRight: 10 }}
-              onPress={() => {
-                this.props.saveAction(this.state.newCommentText, false);
-                this.setState({ newCommentText: null });
-                this.textInputs["inputMain"].clear();
-                Keyboard.dismiss();
-              }}
-            >
-              {this.renderIcon({
-                style: styles.submit,
-                name: "send",
-                size: 15,
-                color: "#9B9B9B"
-              })}
-            </TouchableHighlight>
-          </View>}
+        <View style={{  }}>
+          {this.state.expanded.length == 0 && 
+          <TouchableOpacity
+          activeOpacity={1}
+          onPress={()=>{
+            this.props.openAddCommentModal()
+          }}
+           style={styles.inputSection}>
+              <Text style={{ color: '#8a8a8a' }}>
+                {'Add a comment'}
+              </Text>
+          </TouchableOpacity>}
         </View>
       </View>
     );
