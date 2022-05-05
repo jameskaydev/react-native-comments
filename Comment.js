@@ -148,16 +148,17 @@
                ) : null}
                {this.props.likeAction ? (
                  <TouchableHighlight
-                   style={styles.actionButton}ص
+                   style={styles.actionButton}
+                   onPress={this.handleLike}
                  >
                    <View style={{ flexDirection: "row", alignItems: 'center' }}>
-                     <TouchableOpacity onPress={()=>this.props.upVotePress(this.props.data.id)} style={{ padding : 5 }}>
+                     <TouchableOpacity style={{ padding : 5 }}>
                        <Image style={{ width: 17, height: 17 }} source={require('./top-arrow.png')} />
                      </TouchableOpacity>
                      <Text style={styles.vote}>
-                       {this.props.data.voteCount}
+                       {'432'}
                      </Text>
-                     <TouchableOpacity onPress={()=>this.props.downVotePress(this.props.data.id)} style={{ padding : 5 }}>
+                     <TouchableOpacity style={{ padding : 5 }}>
                        <Image style={{ width: 17, height: 17 }} source={require('./bottom-arrow.png')} />
                      </TouchableOpacity>
                    </View>
