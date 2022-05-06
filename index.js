@@ -88,7 +88,6 @@ export default class Comments extends PureComponent {
   }
 
   toggleExpand(c, focus) {
-    console.log('toggleExpand');
     const id = this.props.keyExtractor(c);
     let expanded = this.state.expanded;
 
@@ -111,9 +110,7 @@ export default class Comments extends PureComponent {
   }
 
   focusOnReplyInput(id) {
-    console.log(id, "id replied");
     let input = this.textInputs["input" + id];
-    console.log(input, "input ref");
     input.measure((x, y, width, height, pageX, pageY) => {
       console.log(pageY);
       input.focus();
@@ -123,10 +120,9 @@ export default class Comments extends PureComponent {
 
   handleReply(c) {
     if (!this.props.isChild) return;
-
+    
     if (!this.props.isChild(c)) {
       this.props.replyAction(c)
-      // this.toggleExpand(c, true);
     } else {
       this.focusOnReplyInput(this.props.parentIdExtractor(c));
     }
@@ -173,12 +169,15 @@ export default class Comments extends PureComponent {
     return (
       <Comment
         data={c}
+        userVote={c.userVote}
+        upVotePress={this.props.upVotePress}
+        downVotePress={this.props.downVotePress}
         id={this.props.keyExtractor(c)}
         usernameTapAction={this.handleUsernameTap}
         username={this.props.usernameExtractor(c)}
         body={this.props.bodyExtractor(c)}
-        // likesNr={this.props.likesExtractor(c).length}
         likesNr={0}
+        voteCount={c.voteCount}
         canEdit={this.canUserEdit(c)}
         updatedAt={this.props.editTimeExtractor(c)}
         replyAction={this.props.replyAction ? this.handleReply : null}
@@ -320,39 +319,6 @@ export default class Comments extends PureComponent {
               // this.props.childrenCountExtractor(item)
               ? (
                 <View style={{}}>
-                  <View style={[styles.inputSection, { left: -9 }]}>
-                    <TextInput
-                      ref={input =>
-                      (this.textInputs[
-                        "input" + this.props.keyExtractor(item)
-                      ] = input)
-                      }
-                      style={styles.input}
-                      multiline={true}
-                      value={this.state.replyCommentText}
-                      onChangeText={text => this.setState({ replyCommentText: text })}
-                      placeholder={"Add a comment"}
-                      placeholderTextColor={'#9B9B9B'}
-                      numberOfLines={3}
-                    />
-                    <TouchableHighlight
-                      onPress={() => {
-                        this.props.saveAction(
-                          this.state.replyCommentText,
-                          this.props.keyExtractor(item)
-                        );
-                        this.setState({ replyCommentText: null });
-                        Keyboard.dismiss();
-                      }}
-                    >
-                      {this.renderIcon({
-                        style: styles.submit,
-                        name: "send",
-                        size: 15,
-                        color: "#9B9B9B"
-                      })}
-                    </TouchableHighlight>
-                  </View>
                   {/* {this.props.childPropName &&
                     this.props.childrenCountExtractor(item) >
                     item[this.props.childPropName].length ? (
@@ -540,7 +506,7 @@ export default class Comments extends PureComponent {
         >
           <View style={styles.editModalContainer}>
             <View style={styles.editModal}>
-              <TextInput
+              {/* <TextInput
                 ref={input => (this.textInputs["editCommentInput"] = input)}
                 style={styles.input}
                 multiline={true}
@@ -548,7 +514,7 @@ export default class Comments extends PureComponent {
                 onChangeText={text => this.setState({ editCommentText: text })}
                 placeholder={"Edit comment"}
                 numberOfLines={3}
-              />
+              /> */}
               <View
                 style={{ flexDirection: "row", justifyContent: "space-around" }}
               >
