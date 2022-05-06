@@ -4,20 +4,27 @@ const styles = StyleSheet.create({
   commentContainer: {
     paddingRight: 5,
     marginBottom: 10,
-    flexDirection: "row-reverse"
+    flexDirection: "row-reverse",
+    justifyContent: 'center',
   },
   left: {
     // padding: 5 ,
-    backgroundColor : 'purple'
+    backgroundColor: 'purple'
   },
   image: {
     height: 30,
     width: 30,
     borderRadius: 15
   },
+  verticalLineView: {
+    width: 0.7,
+    height: '70%',
+    backgroundColor: '#bcbcbc',
+    position: 'absolute',
+    right: 0
+  },
   right: {
-    // width : '100%' ,
-    flex: 1, 
+    flex: 1,
     // backgroundColor : 'blue'
   },
   rightContent: {
@@ -45,7 +52,7 @@ const styles = StyleSheet.create({
   rightActionBar: {
     paddingRight: 10,
     flexDirection: "row",
-    justifyContent: "space-between" ,
+    justifyContent: "space-between",
     // backgroundColor : 'red' ,
 
   },
@@ -73,8 +80,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   vote: {
-    marginHorizontal: 3 ,
-    color: '#bcbcbc' ,
+    marginHorizontal: 3,
+    color: '#bcbcbc',
     fontFamily: 'Roboto',
   },
   repliedSection: {
@@ -102,10 +109,11 @@ const styles = StyleSheet.create({
     fontSize: 11
   },
   inputSection: {
+    height: 39,
     flexDirection: "row",
-    justifyContent: "center",
+    paddingLeft: 10,
     alignItems: "center",
-    backgroundColor: "#393a3c",
+    backgroundColor: "#1F1F1F",
     borderRadius: 10,
     width: '90%',
     alignSelf: 'flex-start',
