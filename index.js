@@ -544,19 +544,6 @@ export default class Comments extends PureComponent {
             </View>
           </View>
         </Modal>
-        <View style={{  }}>
-          {this.state.expanded.length == 0 && 
-          <TouchableOpacity
-          activeOpacity={1}
-          onPress={()=>{
-            this.props.openAddCommentModal()
-          }}
-           style={styles.inputSection}>
-              <Text style={{ color: '#8a8a8a' }}>
-                {'Add a comment'}
-              </Text>
-          </TouchableOpacity>}
-        </View>
       </View>
     );
   }
