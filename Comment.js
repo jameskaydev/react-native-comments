@@ -97,14 +97,17 @@ export default class Comment extends PureComponent {
         <View style={[styles.right]}>
           <View style={styles.rightContent}>
             <View style={styles.rightContentTop}>
-              <TouchableHighlight onPress={this.handleUsernameTap}>
-                <Text style={styles.name}>{this.props.username}</Text>
-              </TouchableHighlight>
+              <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+                <TouchableHighlight onPress={this.handleUsernameTap}>
+                  <Text style={styles.name}>{this.props.username}</Text>
+                </TouchableHighlight>
+                <TimeAgo style={styles.time} time={this.props.updatedAt} />
+              </View>
             </View>
             <Text style={styles.body}>{this.props.body}</Text>
           </View>
           <View style={[styles.rightActionBar]}>
-            <TimeAgo style={styles.time} time={this.props.updatedAt} />
+            <View></View>
             <View style={styles.bottomRightActionBar}>
               {!this.props.child ? (
                 <TouchableHighlight
@@ -131,7 +134,7 @@ export default class Comment extends PureComponent {
                     </Text>
                     <TouchableOpacity onPress={() => this.props.downVotePress(this.props.id)} style={{ padding: 5 }}>
                       {this.props.userVote === 'down'
-                        ?  <Image style={{ width: 17, height: 17 }} source={require('./bottom-arrow-fill.png')} />
+                        ? <Image style={{ width: 17, height: 17 }} source={require('./bottom-arrow-fill.png')} />
                         : <Image style={{ width: 17, height: 17 }} source={require('./bottom-arrow.png')} />
                       }
                     </TouchableOpacity>
