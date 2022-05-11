@@ -2,7 +2,6 @@ import { StyleSheet, PixelRatio } from "react-native";
 
 const styles = StyleSheet.create({
   commentContainer: {
-    paddingRight: 5,
     marginBottom: 10,
     flexDirection: "row-reverse",
     justifyContent: 'center',
@@ -33,7 +32,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#00000"
   },
   rightContentTop: {
-    flexDirection: "row"
+    flexDirection: "row" ,
   },
 
   name: {
@@ -70,10 +69,10 @@ const styles = StyleSheet.create({
   },
   time: {
     fontSize: 12,
-    paddingLeft: 5,
+    marginLeft : 10 ,
+    top : -2 ,
     alignSelf: 'center',
-    color: "#9B9B9B",
-    fontStyle: "italic"
+    color: "#5C5C5C",
   },
   actionText: {
     color: '#bcbcbc',
