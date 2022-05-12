@@ -120,7 +120,7 @@ export default class Comments extends PureComponent {
 
   handleReply(c) {
     if (!this.props.isChild) return;
-    
+
     if (!this.props.isChild(c)) {
       this.props.replyAction(c)
     } else {
@@ -399,8 +399,14 @@ export default class Comments extends PureComponent {
               [{ nativeEvent: { contentOffset: { y: this.props.animatedIndex } } }],
               { useNativeDriver: false },
             )}
+            ListEmptyComponent={() => {
+              return (
+                <Text style={{ color: '#bcbcbc', alignSelf: 'center', marginTop: 70, fontFamily: 'Roboto' }}>
+                  {'This episode has no comments yet'}
+                </Text>
+              )
+            }}
             ListHeaderComponent={this.props.headerComponent}
-            // contentContainerStyle={{ paddingTop : this.props.paddingTop ,}}
             keyboardShouldPersistTaps="always"
             style={{ backgroundColor: 'undefined' }}
             data={this.props.data}
@@ -411,7 +417,7 @@ export default class Comments extends PureComponent {
           />
         ) : null}
 
-        {this.state.loadingComments ? (
+        {/* {this.state.loadingComments ? (
           <View
             style={{
               position: "absolute",
@@ -432,7 +438,7 @@ export default class Comments extends PureComponent {
               size="small"
             />
           </View>
-        ) : null}
+        ) : null} */}
 
         {/* {!this.state.loadingComments &&
           this.props.data &&
